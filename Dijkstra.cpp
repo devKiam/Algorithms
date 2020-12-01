@@ -5,18 +5,18 @@ using namespace std;
 
 void dijkstra(vector<ll> adjList[], vector<ll> cost[], vector<ll> &distanceFromSource, vector<ll> &parent, ll source)
 {
-    priority_queue<ll, vector<ll>, greater<> > pq;
-    pq.push(source); distanceFromSource[source] = 0;
+    priority_queue< pair<ll, ll>, vector<pair<ll, ll>>, greater<> > pq;
+    pq.push(make_pair(0, source)); distanceFromSource[source] = 0;
     while(!pq.empty())
     {
-        ll u = pq.top(); pq.pop();
+        ll u = pq.top().second; pq.pop();
         for(ll i=0; i<adjList[u].size(); i++)
         {
             ll v = adjList[u][i];
             if(cost[u][i] + distanceFromSource[u] < distanceFromSource[v])
             {
-                pq.push(v);
                 distanceFromSource[v] = cost[u][i] + distanceFromSource[u];
+                pq.push(make_pair(distanceFromSource[v], v));
                 parent[v] = u;
             }
         }
@@ -45,7 +45,7 @@ int main()
 
     dijkstra(adjList, cost, distanceFromSource, parent, source);
 
-    
+
     //printing source to destination path
     vector<ll> v;
     ll temp = destination;
