@@ -3,54 +3,64 @@ typedef long long ll;
 typedef unsigned long long ull;
 using namespace std;
 
-ll prim(vector<ll> adjList[], vector<ll> cost[], vector<ll> &parent, ll source)
+
+ll prim(vector<ll> adjList[], vector<ll> edgeWeight[], vector<bool> &isVisited, vector< pair<ll,ll> > &MSTedges, ll source)
 {
-    priority_queue< pair<ll, pair<ll,ll> >, vector<pair<ll, pair<ll,ll> >>, greater<> > pq;
-    pq.push(make_pair(0, make_pair(-2, source)));
+    priority_queue< pair<ll, pair<ll,ll> >, vector<pair<ll, pair<ll,ll> > >, greater<> > pq;
+    pq.push(make_pair(0, make_pair(-1, source)));
     ll minCost = 0;
 
     while(!pq.empty())
     {
-        ll u = pq.top().second.second;
         ll from = pq.top().second.first;
-        ll c = pq.top().first;
+        ll to = pq.top().second.second;
+        ll w = pq.top().first;
         pq.pop();
 
-        if(parent[u] > -1) continue;
-        minCost += c;
-        parent[u] = from;
+        if(isVisited[to]) continue;
+        isVisited[to] = true;
+        minCost += w;
 
-        for(ll i=0; i<adjList[u].size(); i++)
+        MSTedges.push_back(make_pair(from, to));
+
+        for(ll i=0; i<adjList[to].size(); i++)
         {
-            ll v = adjList[u][i];
-            if(parent[v] == -1)
+            ll u = to;
+            ll v = adjList[to][i];
+
+            if(!isVisited[v])
             {
-                pq.push(make_pair(cost[u][i], make_pair(u,v)));
+                pq.push(make_pair(edgeWeight[to][i], make_pair(u, v)));
             }
         }
+
     }
+
     return minCost;
 }
+
 
 int main()
 {
     ios_base::sync_with_stdio(false); cin.tie(nullptr);
-//    memset(dp, -1, sizeof(dp));
-    ll numOfNodes, numOfEdges; cin>>numOfNodes>>numOfEdges;
-    vector<ll> adjList[numOfNodes+1];
-    vector<ll> cost[numOfNodes+1];
-    vector<ll> parent(numOfNodes+1, -1);
 
-    for(ll i = 0; i<numOfEdges; i++)
-    {
+    ll numOfNodes, numOfEdges; cin>>numOfNodes>>numOfEdges;
+    vector<ll> adjList[numOfNodes+1], edgeWeight[numOfNodes+1];
+    vector<bool> isVisited(numOfNodes+1, false);
+    vector< pair<ll, ll> > MSTedges;
+
+    for(ll i=0; i<numOfEdges; i++){
         ll u, v, w; cin>>u>>v>>w;
         adjList[u].push_back(v);
         adjList[v].push_back(u);
-        cost[u].push_back(w);
-        cost[v].push_back(w);
+        edgeWeight[u].push_back(w);
+        edgeWeight[v].push_back(w);
     }
-    ll source; cin>>source;
 
-    cout<<prim(adjList, cost, parent, source)<<endl;
+    cout<<prim(adjList, edgeWeight, isVisited, MSTedges, 1)<<endl;
 
+    for(int i=1; i<MSTedges.size(); i++) // first MSTedge is imaginary, so start from 1
+    {
+        cout<<MSTedges[i].first<<" "<<MSTedges[i].second<<endl;
+    }
 }
