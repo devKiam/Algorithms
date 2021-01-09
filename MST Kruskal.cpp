@@ -16,7 +16,7 @@ int find(int i)
 }
 
 
-int kruskal(vector< pair<ll,pair<ll,ll> > > &edgeList, int numOfEdges)
+int kruskal(vector< pair<ll,pair<ll,ll> > > &edgeList, int numOfEdges, int numOfNodes)
 {
     int MSTCount = 0, MSTweigh = 0;
     for(int i=0; i<edgeList.size(); i++)
@@ -32,7 +32,7 @@ int kruskal(vector< pair<ll,pair<ll,ll> > > &edgeList, int numOfEdges)
             parent[rootV] = rootU;
             MSTCount++;
             MSTweigh += w;
-            if(MSTCount == numOfEdges - 1) break;
+            if(MSTCount == numOfNodes - 1) break;
         }
     }
     return MSTweigh;
@@ -59,5 +59,5 @@ int main()
         parent.push_back(i);
     }
 
-    cout<<kruskal(edgeList, numOfEdges)<<endl;
+    cout<<kruskal(edgeList, numOfEdges, numOfNodes)<<endl;
 }
