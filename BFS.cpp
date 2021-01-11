@@ -3,6 +3,7 @@ typedef long long ll;
 typedef unsigned long long ull;
 using namespace std;
 
+
 void bfs(vector<ll> adjList[], vector<ll> &distance, vector<ll> &parent, ll source)
 {
     queue<ll> q;
@@ -27,6 +28,7 @@ void bfs(vector<ll> adjList[], vector<ll> &distance, vector<ll> &parent, ll sour
         }
     }
 }
+
 
 int main()
 {
